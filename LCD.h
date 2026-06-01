@@ -45,4 +45,3 @@ void LCD_set_cursor(uint8_t row, uint8_t col);
 void LCD_clear(void);
 #endif /* INC_LCD_H_ */
 
-
