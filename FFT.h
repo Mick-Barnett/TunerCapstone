@@ -15,31 +15,47 @@
 #ifndef INC_FFT_H_
 #define INC_FFT_H_
 
-#include "stm32l4xx.h"
-#include "ADC.h"
 #include <stdint.h>
 #include <math.h>
 
-#define f_sample 8000 //8kHz sample rate
-#define FFT_size 2048 // 2048 samples
-#ifndef M_PI
-#define M_PI 3.14159265358979323846f
-#endif
-
-
-/* Creates an object class for real and imaginary components for the FFT.
- * x = real + j(imag)
+/*
+ * FFT size must match ADC window size
  */
+#define FFT_SIZE 2048
+
+/*
+ * Replace this with your actual sample rate.
+ *
+ * Example:
+ * 8000 Hz sample rate
+ * FFT bin width = 8000 / 2048 = 3.90625 Hz
+ */
+#define ADC_SAMPLE_RATE_HZ 8000.0f
+
+#define FFT_BIN_WIDTH_HZ \
+    (ADC_SAMPLE_RATE_HZ / (float)FFT_SIZE)
+
+/* Complex number structure */
 typedef struct
 {
-	float real;
-	float imag;
-} complex_t;
+    float real;
+    float imag;
+}
+complex_t;
 
-//-------------------------FUNCTION PROTOTYPES----------------------------------
+/*-------------------------FUNCTION PROTOTYPES------------------------------- */
+
 void FFT_Init(void);
-void FFT_Get_Freq(uint16_t adc_buffer, uint32_t length);
-void FFT_Noise_Filter(float magnitudes, uint32_t length);
-void FFT_Get_Last_Magnitude();
+
+void FFT_Compute(complex_t *x, uint16_t n);
+
+float FFT_Get_Freq(uint16_t *sample_buffer,
+                   uint32_t length);
+
+float FFT_Get_Last_Magnitude(void);
+
+uint16_t FFT_Get_Last_Peak_Bin(void);
+
+float FFT_Get_Magnitude_At_Bin(uint16_t bin);
 
 #endif /* INC_FFT_H_ */
