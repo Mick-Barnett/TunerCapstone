@@ -36,6 +36,8 @@
 /*------------------------ FUNCTION PROTOTYPES ---------------------*/
 void LCD_Config(void);
 void LCD_init(void);
+void LCD_show_data(void);
+
 void LCD_pulse_ENA(void);
 void LCD_4b_command(uint8_t command);
 void LCD_command(uint8_t command);

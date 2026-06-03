@@ -5,10 +5,8 @@
 #include <stdint.h>
 
 #define PRESCALE 0
-// MSI: 4 MHz, f_clk = 8 kHz
-// T_MSI = 0.25 us, T_clk = 125 us
-// T_clk = 500 * T_MSI
-#define PERIOD 499
+#define SAMP_RATE 8000
+#define PERIOD ((SystemCoreClock/SAMP_RATE)-1)
 
 void TIM3_init(void);
 void TIM3_IRQHandler(void);

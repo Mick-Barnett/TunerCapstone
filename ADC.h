@@ -30,10 +30,6 @@
 #define ADC_HALF_WND   1024
 
 /* Global ADC state */
-extern volatile uint16_t ADC_buffer[ADC_BUFF_SIZE];
-extern volatile uint16_t ADC_buff_idx;
-extern volatile uint16_t ADC_samp_cnt;
-extern volatile uint16_t ADC_ref_idx;
 extern volatile uint8_t ADC_wndw_ready;
 
 /* Public functions */

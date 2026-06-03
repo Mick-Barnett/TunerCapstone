@@ -20,10 +20,10 @@
  */
 #include "ADC.h"
 
-volatile uint16_t ADC_buffer[ADC_BUFF_SIZE] = {0};
-volatile uint16_t ADC_buff_idx = 0;
-volatile uint16_t ADC_samp_cnt = 0;
-volatile uint16_t ADC_ref_idx = 0;
+static volatile uint16_t ADC_buffer[ADC_BUFF_SIZE] = {0};
+static volatile uint16_t ADC_buff_idx = 0;
+static volatile uint16_t ADC_samp_cnt = 0;
+static volatile uint16_t ADC_ref_idx = 0;
 volatile uint8_t ADC_wndw_ready = 0;
 
 void ADC_init(void)

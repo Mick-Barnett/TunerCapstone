@@ -9,10 +9,13 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx.h"
+#include "delay.h"
 #include "ADC.h"
 #include "FFT.h"
+#include "Processor.h"
+#include "TIMER.h"
 #include "lpuart.h"
-#include "delay.h"
+#include "LCD.h"
 
 void Error_Handler(void);
 
