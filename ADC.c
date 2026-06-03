@@ -63,8 +63,6 @@ void ADC_init(void)
 
     NVIC->ISER[0] = (1 << (ADC1_2_IRQn & 0x1F));
     __enable_irq();
-
-    ADC1->CR |= ADC_CR_ADSTART;
 }
 
 void ADC1_2_IRQHandler(void)
@@ -89,8 +87,6 @@ void ADC1_2_IRQHandler(void)
         }
 
         ADC1->ISR = ADC_ISR_EOC;					//clear flag
-
-        ADC1->CR |= ADC_CR_ADSTART;				//start next conversion
     }
 }
 
