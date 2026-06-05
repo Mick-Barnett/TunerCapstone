@@ -84,7 +84,7 @@ int main(void)
          if (DEBUG_MODE)
          {
             float mag = FFT_Get_Last_Magnitude();
-            uint16_t bin = FFT_Get_Last_Peak_Bin();
+            float bin = FFT_Get_Last_Peak_Bin();
             LPUART_print_FFT_debug(bin, freq, mag);
          }
          else
