@@ -90,7 +90,7 @@ void ADC1_2_IRQHandler(void)
     }
 }
 
-// ChatGPT Model 5.5 was used to assist with arithmetic / logic
+
 void ADC_GetWindow(uint16_t window[ADC_WND_SIZE])
 {
 	// determine starting index for sample window accomodating for array wrap

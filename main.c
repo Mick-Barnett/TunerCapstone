@@ -19,7 +19,8 @@
 
 void SystemClock_Config(void);
 
-#define DEBUG_MODE 0 // Set to 1 to debug using LPUART
+#define DEBUG_MODE 0   // Set to 1 to debug using LPUART
+#define MEAS_LATENCY 0 // Set to 1 when want to meas. update latency
 static uint16_t sample_window[ADC_WND_SIZE];
 
 int main(void)
@@ -44,6 +45,17 @@ int main(void)
       LCD_Config();
       LCD_init();
    }
+   if (MEAS_LATENCY)
+   { // GPIO Config for measuring latency
+      RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+      GPIOA->MODER &= ~GPIO_MODER_MODE0;
+      GPIOA->MODER |= GPIO_MODER_MODE0_0; // output
+      GPIOA->OTYPER &= ~GPIO_OTYPER_OT0; // push-pull
+      GPIOA->OSPEEDR &= ~GPIO_OSPEEDR_OSPEED0;
+      GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEED0; // v high speed
+      GPIOA->PUPDR &= ~GPIO_PUPDR_PUPD0; // no pupd
+      GPIOA->BRR = GPIO_PIN_3; // start low
+   }
    TIM3_init(); // Starts 8 kHz timer for ADC conv.
 
    /*===== Main process flow control =====*/
@@ -51,6 +63,15 @@ int main(void)
    {
       if (ADC_wndw_ready) // Global flag set by ADC.c IRQHandler
       {
+         if (MEAS_LATENCY)
+         {
+            ADC_wndw_ready = 0; // Clear flag -> discard window
+            GPIOA->BSRR = GPIO_PIN_3; // Toggle high
+            while (!ADC_wndw_ready)
+            {
+               ; // Wait for next window to be ready
+            }
+         }
          /*----- ADC -----*/
          // Copy Sample Window array of raw counts
          ADC_GetWindow(sample_window);
@@ -69,6 +90,10 @@ int main(void)
          else
          {
             LCD_show_data(); // Assumes globals have been updated
+            if (MEAS_LATENCY)
+            {
+               GPIOB->BRR = GPIO_PIN_0; // GPIO LOW
+            }
          }
       }
    }
