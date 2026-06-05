@@ -9,6 +9,9 @@
 #define INC_LCD_H_
 #include "stm32l4xx_hal.h"
 #include "delay.h"
+#include <stdio.h>  // for snprintf to handle strings
+#include <math.h>
+#include "Processor.h"
 /*------------------------ PORT DEFINITIONS ------------------------*/
 #define LCD_PORT        GPIOC
 /*------------------------ LCD CONTROL PINS ------------------------*/
@@ -16,9 +19,8 @@
 #define LCD_EN_PIN      12
 #define LCD_RS          GPIO_PIN_11
 #define LCD_EN          GPIO_PIN_12
-/*------------------------ LCD DATA PINS ---------------------------*/
-/*
-* Scrambled wiring:
+/*------------------------ LCD DATA PINS ---------------------------
+* Wiring:
 * DB4 -> PC4
 * DB5 -> PC1
 * DB6 -> PC3
