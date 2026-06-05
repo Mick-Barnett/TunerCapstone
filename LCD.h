@@ -19,10 +19,10 @@
 /*------------------------ LCD DATA PINS ---------------------------*/
 /*
 * Scrambled wiring:
-* DB4 -> PC0
-* DB5 -> PC3
-* DB6 -> PC1
-* DB7 -> PC4
+* DB4 -> PC4
+* DB5 -> PC1
+* DB6 -> PC3
+* DB7 -> PC0
 */
 #define LCD_DB4_PIN     4
 #define LCD_DB5_PIN     1

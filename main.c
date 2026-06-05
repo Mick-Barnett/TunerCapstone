@@ -24,6 +24,7 @@ static uint16_t sample_window[ADC_WND_SIZE];
 
 int main(void)
 {
+   /*===== System and module init/config =====*/
    // System Defaults
    HAL_Init();
    SystemClock_Config();
@@ -45,9 +46,10 @@ int main(void)
    }
    TIM3_init(); // Starts 8 kHz timer for ADC conv.
 
+   /*===== Main process flow control =====*/
    while (1)
    {
-      if (ADC_wndw_ready)
+      if (ADC_wndw_ready) // Global flag set by ADC.c IRQHandler
       {
          /*----- ADC -----*/
          // Copy Sample Window array of raw counts
@@ -55,19 +57,19 @@ int main(void)
          /*----- FFT -----*/
          // Processes samples into freq and returns bin freq?
          float freq = FFT_Get_Freq(sample_window, ADC_WND_SIZE);
-         float mag = FFT_Get_Last_Magnitude();
-         uint16_t bin = FFT_Get_Last_Peak_Bin();
          /*----- PROCESSING -----*/
          Processor(freq); // Updates globals: note, cents, percent_error
          /*----- DISPLAY -----*/
-         if (DEBUG_MODE) {
+         if (DEBUG_MODE)
+         {
+            float mag = FFT_Get_Last_Magnitude();
+            uint16_t bin = FFT_Get_Last_Peak_Bin();
             LPUART_print_FFT_debug(bin, freq, mag);
          }
-         else {
+         else
+         {
             LCD_show_data(); // Assumes globals have been updated
          }
-         
-         delay_ms(100); //<<<<<<<< this might be diff delay module on git
       }
    }
 }
@@ -85,7 +87,7 @@ void SystemClock_Config(void)
    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
    RCC_OscInitStruct.MSIState = RCC_MSI_ON;
    RCC_OscInitStruct.MSICalibrationValue = 0;
-   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_9;
+   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 
    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -105,7 +107,7 @@ void SystemClock_Config(void)
    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct,
-                           FLASH_LATENCY_1) != HAL_OK)
+                           FLASH_LATENCY_0) != HAL_OK)
    {
       Error_Handler();
    }
