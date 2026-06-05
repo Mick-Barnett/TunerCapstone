@@ -1,10 +1,20 @@
 /*
- * LCD.h
- *
- *  Created on: Jun 1, 2026
- *      Author: mickp
+ *******************************************************************************
+ * CAPSTONE: LCD
+ *******************************************************************************
+ * @file           : LCD.h
+ * @brief          : Header file for LCD configuration and display functions
+ * project         : EE 329 S'26 Capstone
+ * authors         : Mick Barnett
+ * version         : 0.1
+ * date            : 06/2026
+ * compiler        : STM32CubeIDE
+ * target          : NUCLEO-L4A6ZG
+ * clocks          : LCD timing delays utilize SysTick via delay_us()
+ * @attention      : SysTick_Init() must be called before LCD_init()
+ *                   LCD_Config() should be called before LCD_init()
+ *******************************************************************************
  */
-
 #ifndef INC_LCD_H_
 #define INC_LCD_H_
 #include "stm32l4xx_hal.h"

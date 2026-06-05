@@ -1,10 +1,26 @@
-#include "timer.h"
+/*
+ *******************************************************************************
+ * CAPSTONE: TIMER.c
+ *******************************************************************************
+ * @file           : TIMER.c
+ * @brief          : Source file for TIM3 configuration and ADC sampling trigger
+ * project         : EE 329 S'26 Capstone
+ * authors         : Tyler Ragasa
+ * version         : 0.1
+ * date            : 06/2026
+ * compiler        : STM32CubeIDE
+ * target          : NUCLEO-L4A6ZG
+ * clocks          : MSI system clock, TIM3 ARR function of SystemCoreClock
+ * @attention      : TIM3_init must be called as last init/config
+ ******************************************************************************
+ * Header format adapted from [Code Appendix by Kevin Vo] pg 5
+ */
 
-/*----- Local Defines -----*/
-#define TIM3_PRESCALE 0
-#define TIM3_SAMP_RATE 8000
-#define TIM3_PERIOD ((SystemCoreClock / TIM3_SAMP_RATE) - 1)
-// Lightly adapted from EE329 Lab Manual - A4
+#include "timer.h"
+/*
+ * Configures and enables TIM3 for ADC sampling clock freq 8 kHz
+ * - Adapted from EE329 Lab Manual - A4
+ */
 void TIM3_init(void)
 {
    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;       // enable clock for TIM3
@@ -20,6 +36,11 @@ void TIM3_init(void)
    TIM3->CR1 |= TIM_CR1_CEN;                   // start TIM3 CR1
 }
 
+/*
+ * TIM3 Interrupt service routine
+ * - Runs when TIM3 counter reaches ARR and sets update interrupt flag
+ * - Clears UIF then starts ADC conversion
+ */
 void TIM3_IRQHandler(void)
 {
    if (TIM3->SR & TIM_SR_UIF)
