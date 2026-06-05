@@ -1,5 +1,9 @@
 #include "lpuart.h"
 
+/*----- Local Defines -----*/
+#define LPUART_BAUD 115200U
+#define LPUART_BRR ((256*SystemCodeClock)/LPUART_BAUD)
+
 static void LPUART_print_char(char c)
 {
     while (!(LPUART1->ISR & USART_ISR_TXE)) { }
@@ -28,7 +32,7 @@ void LPUART_init(void)
    LPUART1->CR1 &= ~(USART_CR1_M1 | USART_CR1_M0);
    LPUART1->CR2 &= ~USART_CR2_STOP;
    LPUART1->CR1 &= ~USART_CR1_PCE;
-   LPUART1->BRR  =  0xD056;    /* 115200 baud at 4 MHz clock */
+   LPUART1->BRR  =  LPUART_BRR;
    LPUART1->CR1 |=  USART_CR1_TE | USART_CR1_RE;
    LPUART1->CR1 |=  USART_CR1_UE;
 }
