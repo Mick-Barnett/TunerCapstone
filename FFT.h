@@ -2,8 +2,8 @@
  ******************************************************************************
  * @file    : FFT.h
  * @brief   : Header for FFT module. Contains function prototypes for obtaining
- * 			  frequency, noise filtering, and choosing a magnitude peak for
- * 			  harmonics.
+ *            frequency, noise filtering, and choosing a magnitude peak for
+ *            harmonics.
  * project  : EE 329 S'26 A5
  * authors  : Aaron Price Jr.
  * version  : 0.2
@@ -54,7 +54,14 @@ float FFT_Get_Freq(uint16_t *sample_buffer,
 
 float FFT_Get_Last_Magnitude(void);
 
-uint16_t FFT_Get_Last_Peak_Bin(void);
+/*
+ * Returns the most recent peak bin.
+ *
+ * NOTE:
+ * This is now the interpolated/fractional peak bin, not just the integer FFT bin.
+ * Example: instead of returning 56, this may return 56.31.
+ */
+float FFT_Get_Last_Peak_Bin(void);
 
 float FFT_Get_Magnitude_At_Bin(uint16_t bin);
 
