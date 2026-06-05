@@ -111,6 +111,9 @@ void FFT_Compute(complex_t *x, uint16_t n)
             float w_real = 1.0f;
             float w_imag = 0.0f;
 
+            /* Heart of FFT_Compute. Creates the transformed array
+             * by taking the even and odd signals, multiplying them by
+             * twiddle coefficient, and returning it to the array */
             for (uint16_t j = 0; j < len / 2; j++)
             {
                 complex_t even = x[i + j];
@@ -160,13 +163,16 @@ static void FFT_Compute_Magnitudes(void)
  * between FFT bins.
  *
  * The integer FFT peak bin gives the largest sampled magnitude. However,
- * the real signal frequency usually falls between two FFT bins. This function
- * looks at the peak bin and its two neighbors to estimate the fractional
- * bin location of the actual peak.
+ * the real signal frequency usually falls between two FFT integer bins. This function
+ * looks at the peak bin and its two neighbors to estimate where the actual observed
+ * frequency lies between the two neighbooring bins.
  *
  * Example:
  * integer peak bin = 56
  * interpolated bin = 56.31
+ * 
+ * NOTE: ChatGPT, Model 5.5 was used to program this function, to improve
+ * the accuracy of the FFT without having to sacrifice latency
  */
 static float FFT_Quadratic_Interpolate(uint16_t peak_bin)
 {
@@ -208,7 +214,13 @@ static float FFT_Quadratic_Interpolate(uint16_t peak_bin)
 }
 
 
-//Obtains the frequency of peaks in the spectral domain sample
+/* Obtains the frequency of peaks in the FFT'd sample 
+ * by obtaining the magnitude of all the frequencies present
+ * in the time domain sample, choosing the fundamental frequency
+ *
+ * NOTE: ChatGPT Model 5.5 was used to impliment Quadratic Peak
+ * Interpolation into this function
+*/
 float FFT_Get_Freq(uint16_t *sample_buffer, uint32_t length)
 {
     if (sample_buffer == 0 || length < FFT_SIZE)
