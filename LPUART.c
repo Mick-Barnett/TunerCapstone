@@ -2,7 +2,7 @@
 
 /*----- Local Defines -----*/
 #define LPUART_BAUD 115200U
-#define LPUART_BRR ((256*SystemCodeClock)/LPUART_BAUD)
+#define LPUART_BRR ((256*SystemCoreClock)/LPUART_BAUD)
 
 static void LPUART_print_char(char c)
 {

@@ -148,7 +148,7 @@ void LCD_show_data(void)
    } else if (cents > 5.0f) {
       tune_indicator = '>';
    } else {
-      tune_indicator = 'x'
+      tune_indicator = 'x';
    }
    // Line 1: "Note: -- |b x #|"
    // Update note '--'

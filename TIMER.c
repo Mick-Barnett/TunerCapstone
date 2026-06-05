@@ -14,7 +14,7 @@ void TIM3_init(void)
    TIM3->ARR = TIM3_PERIOD;                    // ARR = T = counts @4MHz
    TIM3->CNT = 0;                              // Start counting from 0
    TIM3->SR &= ~(TIM_SR_UIF);                  // Clear pending flag
-   TIM3->DIER |= TIM_DIER_UIF;                 // enable update interupt
+   TIM3->DIER |= TIM_DIER_UIE;                 // enable update interupt
    NVIC->ISER[0] |= (1 << (TIM3_IRQn & 0x1F)); // set NVIC interrupt: 0x1F
    __enable_irq();                             // global IRQ enable
    TIM3->CR1 |= TIM_CR1_CEN;                   // start TIM3 CR1
