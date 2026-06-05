@@ -1,9 +1,5 @@
 #include "lpuart.h"
 
-/*----- Local Defines -----*/
-#define LPUART_BAUD 115200U
-#define LPUART_BRR ((256*SystemCoreClock)/LPUART_BAUD)
-
 static void LPUART_print_char(char c)
 {
     while (!(LPUART1->ISR & USART_ISR_TXE)) { }
@@ -32,7 +28,7 @@ void LPUART_init(void)
    LPUART1->CR1 &= ~(USART_CR1_M1 | USART_CR1_M0);
    LPUART1->CR2 &= ~USART_CR2_STOP;
    LPUART1->CR1 &= ~USART_CR1_PCE;
-   LPUART1->BRR  =  LPUART_BRR;
+   LPUART1->BRR  =  0xD056;    /* 115200 baud at 4 MHz clock */
    LPUART1->CR1 |=  USART_CR1_TE | USART_CR1_RE;
    LPUART1->CR1 |=  USART_CR1_UE;
 }
@@ -106,7 +102,7 @@ void LPUART_print_float_2(float value)
     LPUART_print_char((char)('0' + (frac % 10)));
 }
 
-void LPUART_print_FFT_debug(uint16_t peak_bin,
+void LPUART_print_FFT_debug(float peak_bin,
                             float peak_freq,
                             float peak_mag)
 {
@@ -115,7 +111,7 @@ void LPUART_print_FFT_debug(uint16_t peak_bin,
     LPUART_print("========== FFT DEBUG ==========\r\n\r\n");
 
     LPUART_print("Peak Bin      : ");
-    LPUART_print_uint32(peak_bin);
+    LPUART_print_float_2(peak_bin);
     LPUART_print("\r\n");
 
     LPUART_print("Peak Frequency: ");
@@ -178,4 +174,3 @@ char LPUART_read_char(void)
 
     return c;
 }
-
