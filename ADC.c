@@ -26,6 +26,15 @@ static volatile uint16_t ADC_samp_cnt = 0;
 static volatile uint16_t ADC_ref_idx = 0;
 volatile uint8_t ADC_wndw_ready = 0;
 
+/*
+* Configures ADC1 (on PA0) to sample the microphone input
+* - Enables ADC and GPIO clcoks
+* - PA0 in analog mode
+* - Configures power and calibration
+* - Sets ADC sample time
+* - Enables end-of-conversion interrupt and IRQ
+* NOTE: ADC conversions are started externally by TIMER module.
+*/
 void ADC_init(void)
 {
     RCC->AHB2ENR |= RCC_AHB2ENR_ADCEN;
@@ -65,6 +74,18 @@ void ADC_init(void)
     __enable_irq();
 }
 
+/*
+* ADC1 Interrupt service routine
+* - Runs when ADC completes a conversion and raises EOC flag
+* - Sample read from ADC1->DR and saved into circular buffer @ buffer_idx
+* - Buffer wraps to 0 when index reaches end of buffer array
+* - Sample counter tracks how many "new" samples have been collected since
+*   the last FFT window was flagged as ready.
+* - Once half a windows worth of samples have been collected, the current
+*   buffer index is stored to reference endpoint for next ADC window. This
+*   creates overlapping moving sample windows.
+* - ADC_wndw_ready flag is raised so main can copy the sample array for FFT
+*/
 void ADC1_2_IRQHandler(void)
 {
     if (ADC1->ISR & ADC_ISR_EOC)
@@ -90,7 +111,16 @@ void ADC1_2_IRQHandler(void)
     }
 }
 
-
+/*
+* Copies the most recent ADC sample window into the provided array
+* This allows the FFT module to process a sample window while the ADC
+* continues to collect samples. Additionally, 
+* - Called by main, assuming ADC_wndw_ready flag has been raised
+* - Takes stored reference index as endpoint of array and calculates the
+*   the corresponding starting index for the full 2048 sample window
+* - Accomodates for buffer wrapping
+* - After window is copied, ADC_wndw_ready flag is cleared
+*/
 void ADC_GetWindow(uint16_t window[ADC_WND_SIZE])
 {
 	// determine starting index for sample window accomodating for array wrap
