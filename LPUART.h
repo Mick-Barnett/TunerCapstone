@@ -22,7 +22,7 @@ void LPUART_print_uint32(uint32_t value);
 void LPUART_print_float_2(float value);
 
 /* FFT debug display */
-void LPUART_print_FFT_debug(uint16_t peak_bin,
+void LPUART_print_FFT_debug(float peak_bin,
                             float peak_freq,
                             float peak_mag);
 
@@ -34,3 +34,4 @@ void LPUART_print_FFT_two_peaks(uint16_t bin1,
                                 float mag2);
 
 #endif /* INC_LPUART_H_ */
+
