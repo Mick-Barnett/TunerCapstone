@@ -20,7 +20,7 @@
 void SystemClock_Config(void);
 
 #define DEBUG_MODE 0   // Set to 1 to debug using LPUART
-#define MEAS_LATENCY 0 // Set to 1 when want to meas. update latency
+#define MEAS_LATENCY 1 // Set to 1 when want to meas. update latency
 static uint16_t sample_window[ADC_WND_SIZE];
 
 int main(void)
@@ -48,12 +48,12 @@ int main(void)
    if (MEAS_LATENCY)
    { // GPIO Config for measuring latency
       RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
-      GPIOA->MODER &= ~GPIO_MODER_MODE0;
-      GPIOA->MODER |= GPIO_MODER_MODE0_0; // output
-      GPIOA->OTYPER &= ~GPIO_OTYPER_OT0; // push-pull
-      GPIOA->OSPEEDR &= ~GPIO_OSPEEDR_OSPEED0;
-      GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEED0; // v high speed
-      GPIOA->PUPDR &= ~GPIO_PUPDR_PUPD0; // no pupd
+      GPIOA->MODER &= ~GPIO_MODER_MODE3;
+      GPIOA->MODER |= GPIO_MODER_MODE3_0; // output
+      GPIOA->OTYPER &= ~GPIO_OTYPER_OT3; // push-pull
+      GPIOA->OSPEEDR &= ~GPIO_OSPEEDR_OSPEED3;
+      GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEED3; // v high speed
+      GPIOA->PUPDR &= ~GPIO_PUPDR_PUPD3; // no pupd
       GPIOA->BRR = GPIO_PIN_3; // start low
    }
    TIM3_init(); // Starts 8 kHz timer for ADC conv.
@@ -92,9 +92,10 @@ int main(void)
             LCD_show_data(); // Assumes globals have been updated
             if (MEAS_LATENCY)
             {
-               GPIOB->BRR = GPIO_PIN_0; // GPIO LOW
+               GPIOA->BRR = GPIO_PIN_3; // GPIO LOW
             }
          }
+         delay_us(1000);
       }
    }
 }
